@@ -1,0 +1,364 @@
+/* Dashboard IEBM - Estilos */
+
+:root {
+  --iebm-primary: #20B2AA;
+  --iebm-secondary: #17A2B8;
+  --iebm-success: #28a745;
+  --iebm-light: #f8f9fa;
+  --iebm-dark: #2c3e50;
+  --iebm-gradient: linear-gradient(135deg, var(--iebm-primary), var(--iebm-secondary));
+}
+
+body {
+  background: linear-gradient(135deg, var(--iebm-light) 0%, #e9ecef 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+html, body {
+  width: 100%;
+  height: auto;
+}
+
+.navbar-iebm {
+  background: white !important;
+  border: none;
+  border-top: 3px solid var(--iebm-primary) !important;
+  box-shadow: inset 0 -3px 0 var(--iebm-primary) !important;
+}
+
+.card-stat {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.card-stat:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.card-stat .card-body {
+  padding: 2rem;
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.stat-icon.primary { background: var(--iebm-gradient); }
+.stat-icon.success { background: linear-gradient(135deg, #28a745, #20c997); }
+.stat-icon.warning { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+.stat-icon.danger { background: linear-gradient(135deg, #dc3545, #e83e8c); }
+
+.btn-iebm {
+  background: var(--iebm-gradient);
+  border: none;
+  color: white;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-iebm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(32, 178, 170, 0.4);
+  color: white;
+}
+
+.btn-outline-iebm {
+  border: 2px solid var(--iebm-primary);
+  color: var(--iebm-primary);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-iebm:hover {
+  background: var(--iebm-gradient);
+  border-color: var(--iebm-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.text-iebm { color: var(--iebm-primary) !important; }
+.bg-iebm { background: var(--iebm-gradient) !important; }
+
+.section-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  background: var(--iebm-gradient);
+  color: white;
+  border-radius: 20px 20px 0 0;
+  padding: 1.5rem;
+}
+
+.table-custom th {
+  background-color: var(--iebm-light);
+  border: none;
+  color: var(--iebm-dark);
+  font-weight: 600;
+  padding: 1rem;
+}
+
+.table-custom td {
+  border: none;
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.badge-presente { background: linear-gradient(45deg, #28a745, #20c997); color: white; }
+.badge-ausente { background: linear-gradient(45deg, #dc3545, #e83e8c); color: white; }
+.badge-tardanza { background: linear-gradient(45deg, #ffc107, #fd7e14); color: white; }
+
+.modal-header-iebm {
+  background: var(--iebm-gradient);
+  color: white;
+  border: none;
+}
+
+.form-control:focus {
+  border-color: var(--iebm-primary);
+  box-shadow: 0 0 0 0.2rem rgba(32, 178, 170, 0.25);
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--iebm-gradient);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding: 0 10px;
+  }
+  
+  .card-stat {
+    margin-bottom: 1rem;
+  }
+  
+  .card-stat .card-body {
+    padding: 1.2rem;
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .navbar-brand {
+    font-size: 0.9rem;
+  }
+  
+  .section-header {
+    padding: 1rem;
+  }
+  
+  .section-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .section-header h5 {
+    font-size: 1rem;
+  }
+  
+  .table-custom th,
+  .table-custom td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .btn-sm {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  .chart-container {
+    height: 300px;
+    padding: 0.5rem;
+    margin: 1rem -0.5rem;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .row {
+    margin-left: -5px;
+    margin-right: -5px;
+  }
+  
+  .col-lg-6 {
+    padding: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 8px;
+  }
+  
+  .navbar {
+    padding: 0.5rem 0;
+  }
+  
+  .navbar-brand {
+    font-size: 0.8rem;
+  }
+  
+  .navbar-brand img {
+    height: 30px !important;
+  }
+  
+  .navbar-brand div {
+    line-height: 1.2;
+  }
+  
+  .navbar-brand small {
+    display: none;
+  }
+  
+  .card-stat .card-body {
+    padding: 0.8rem;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+  }
+  
+  .h4 {
+    font-size: 1.5rem;
+  }
+  
+  .chart-container {
+    height: 250px;
+    padding: 0.3rem;
+  }
+  
+  .section-card {
+    border-radius: 10px;
+    margin-bottom: 1rem;
+  }
+  
+  .section-header {
+    padding: 0.8rem;
+  }
+  
+  .section-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .section-header h5 {
+    font-size: 0.9rem;
+  }
+  
+  .btn-iebm,
+  .btn-outline-iebm,
+  .btn-light {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.8rem;
+  }
+  
+  table {
+    font-size: 0.85rem;
+  }
+  
+  .table-custom th,
+  .table-custom td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .modal-dialog {
+    margin: 1rem auto;
+  }
+  
+  .row {
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  
+  [class*='col-'] {
+    padding: 4px;
+  }
+  
+  .mt-5 {
+    margin-top: 3rem !important;
+  }
+  
+  .pt-5 {
+    padding-top: 3rem !important;
+  }
+  
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+  }
+  
+  .dropdown-menu {
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 0 6px;
+  }
+  
+  .navbar-brand {
+    font-size: 0.7rem;
+  }
+  
+  .chart-container {
+    height: 200px;
+  }
+  
+  .h4 {
+    font-size: 1.2rem;
+  }
+  
+  .btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
