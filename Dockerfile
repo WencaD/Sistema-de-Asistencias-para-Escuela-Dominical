@@ -1,12 +1,16 @@
-FROM node:16
+FROM node:16-alpine
 
 WORKDIR /app
 
-COPY backend/package*.json ./
-
-RUN npm install
-
+# Copiar todo el proyecto
 COPY . .
+
+# Instalar dependencias del backend
+WORKDIR /app/backend
+RUN npm ci --only=production
+
+# Volver a la raíz de la app
+WORKDIR /app
 
 EXPOSE 3000
 
