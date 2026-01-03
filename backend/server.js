@@ -73,17 +73,18 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     await connectDB();
-    
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-      console.log(`📊 Dashboard principal: http://localhost:${PORT}`);
-      console.log(`🔐 Login de maestros: http://localhost:${PORT}/login`);
-      console.log(`👩‍🏫 Dashboard maestros: http://localhost:${PORT}/dashboard`);
-    });
+    console.log('✅ Conectado a MySQL');
   } catch (error) {
-    console.error('❌ Error iniciando el servidor:', error);
-    process.exit(1);
+    console.warn('⚠️ No se pudo conectar a MySQL. Ejecutando en modo demo.');
+    console.warn('Detalles:', error.message);
   }
+  
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`📊 Dashboard principal: http://localhost:${PORT}`);
+    console.log(`🔐 Login de maestros: http://localhost:${PORT}/login`);
+    console.log(`👩‍🏫 Dashboard maestros: http://localhost:${PORT}/dashboard`);
+  });
 }
 
 startServer();
