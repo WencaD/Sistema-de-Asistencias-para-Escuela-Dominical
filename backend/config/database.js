@@ -23,8 +23,9 @@ async function connectDB() {
     
     return connection;
   } catch (error) {
-    console.error('❌ Error conectando a MySQL:', error);
-    throw error;
+    console.warn('⚠️ No se pudo conectar a MySQL:', error.message);
+    console.warn('La aplicación funcionará en modo demo sin persistencia de datos');
+    return null;
   }
 }
 
