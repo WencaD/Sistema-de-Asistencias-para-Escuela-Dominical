@@ -4,9 +4,7 @@
   "description": "Root package for IEBM Attendance System deployment",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "install-backend": "cd backend && npm install",
-    "postinstall": "npm run install-backend"
+    "start": "node backend/server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
