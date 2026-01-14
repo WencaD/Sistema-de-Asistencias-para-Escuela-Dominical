@@ -132,18 +132,6 @@ router.post('/', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Alumno no encontrado en su clase' });
     }
 
-    // Determinar el estado basado en la hora de llegada si está presente
-    let estadoFinal = estado;
-    if (estado === 'presente' && hora_llegada) {
-      const horaClase = moment('10:00', 'HH:mm');
-      const horaLlegada = moment(hora_llegada, 'HH:mm');
-      const tolerancia = 8; // minutos
-
-      if (horaLlegada.isAfter(horaClase.add(tolerancia, 'minutes'))) {
-        estadoFinal = 'tarde';
-      }
-    }
-
     // Insertar o actualizar asistencia
     const [result] = await connection.execute(`
       INSERT INTO asistencias (alumno_id, fecha, hora_llegada, estado, observaciones, maestro_id)
@@ -152,12 +140,12 @@ router.post('/', verifyToken, async (req, res) => {
         hora_llegada = VALUES(hora_llegada),
         estado = VALUES(estado),
         observaciones = VALUES(observaciones)
-    `, [alumno_id, fecha, hora_llegada || null, estadoFinal, observaciones || '', maestro_id]);
+    `, [alumno_id, fecha, hora_llegada || null, estado, observaciones || '', maestro_id]);
 
     res.json({
       success: true,
       message: 'Asistencia registrada correctamente',
-      estado: estadoFinal
+      estado: estado
     });
 
   } catch (error) {
@@ -205,18 +193,7 @@ router.post('/multiple', verifyToken, async (req, res) => {
         continue;
       }
 
-      // Determinar el estado basado en la hora de llegada
-      let estadoFinal = estado;
-      if (estado === 'presente' && hora_llegada) {
-        const horaClase = moment('10:00', 'HH:mm');
-        const horaLlegada = moment(hora_llegada, 'HH:mm');
-        const tolerancia = 8; // minutos
-
-        if (horaLlegada.isAfter(horaClase.clone().add(tolerancia, 'minutes'))) {
-          estadoFinal = 'tardanza';
-        }
-      }
-
+      // Insertar o actualizar asistencia en bucle
       try {
         await connection.execute(`
           INSERT INTO asistencias (alumno_id, fecha, hora_llegada, estado, observaciones, maestro_id)
@@ -225,10 +202,10 @@ router.post('/multiple', verifyToken, async (req, res) => {
             hora_llegada = VALUES(hora_llegada),
             estado = VALUES(estado),
             observaciones = VALUES(observaciones)
-        `, [alumno_id, fecha, hora_llegada || null, estadoFinal, observaciones || '', maestro_id]);
+        `, [alumno_id, fecha, hora_llegada || null, estado, observaciones || '', maestro_id]);
 
-        console.log(`✅ Asistencia guardada - Alumno: ${alumno_id}, Estado: ${estadoFinal}`);
-        resultados.push({ alumno_id, estado: estadoFinal, success: true });
+        console.log(`✅ Asistencia guardada - Alumno: ${alumno_id}, Estado: ${estado}`);
+        resultados.push({ alumno_id, estado: estado, success: true });
       } catch (error) {
         console.error(`❌ Error alumno ${alumno_id}:`, error.message);
         resultados.push({ alumno_id, success: false, error: error.message });

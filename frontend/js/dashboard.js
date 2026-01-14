@@ -25,6 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
   configurarEventos();
   actualizarFecha();
   setTimeout(cargarDatos, 500);
+
+  // Auto-refresco cada 30 segundos para mantener la lista actualizada
+  setInterval(() => {
+    console.log('🔄 Refrescando datos automáticamente...');
+    cargarDatos();
+  }, 30000);
 });
 
 /**
@@ -64,7 +70,7 @@ async function cargarDatos() {
       fetch('/api/alumnos', { headers: { 'Authorization': `Bearer ${token}` } }),
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
     ]);
-    
+
     if (resAlumnos.ok) {
       const data = await resAlumnos.json();
       alumnosData = data.alumnos || [];
@@ -80,7 +86,7 @@ async function cargarDatos() {
       fetch('/api/asistencias/hoy', { headers: { 'Authorization': `Bearer ${token}` } }),
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
     ]);
-    
+
     if (resAsistencias.ok) {
       const dataA = await resAsistencias.json();
       console.log('📊 Datos de asistencias crudos:', dataA);
@@ -126,24 +132,24 @@ function actualizarEstadisticas() {
   const mes = String(ahora.getMonth() + 1).padStart(2, '0');
   const día = String(ahora.getDate()).padStart(2, '0');
   const hoy = `${año}-${mes}-${día}`;
-  
+
   const total = alumnosData.filter(a => a.activo).length;
   const alumnosIds = alumnosData.map(a => a.id);
-  const asistenciasClase = asistenciasData.filter(a => 
+  const asistenciasClase = asistenciasData.filter(a =>
     alumnosIds.includes(a.alumno_id) && a.fecha === hoy
   );
-  
+
   console.log(`📊 Estadísticas - Total alumnos: ${total}, Asistencias hoy: ${asistenciasClase.length}`);
-  
+
   const presentes = asistenciasClase.filter(a => a.estado === 'presente').length;
   const tardanzas = asistenciasClase.filter(a => a.estado === 'tardanza').length;
   const ausentes = Math.max(0, total - presentes - tardanzas);
-  
+
   document.getElementById('totalAlumnos').textContent = total;
   document.getElementById('presentesHoy').textContent = presentes;
   document.getElementById('llegadasTarde').textContent = tardanzas;
   document.getElementById('faltasHoy').textContent = ausentes;
-  
+
   const porcentaje = total > 0 ? Math.round((presentes / total) * 100) : 0;
   document.getElementById('porcentajeAsistencia').textContent = `${porcentaje}%`;
   document.getElementById('resumenTotal').textContent = total;
@@ -151,32 +157,32 @@ function actualizarEstadisticas() {
 
 function renderAsistencia() {
   const tbody = document.getElementById('asistenciaTableBody');
-  
+
   // Usar fecha local, no UTC
   const ahora = new Date();
   const año = ahora.getFullYear();
   const mes = String(ahora.getMonth() + 1).padStart(2, '0');
   const día = String(ahora.getDate()).padStart(2, '0');
   const hoy = `${año}-${mes}-${día}`;
-  
+
   console.log('📅 Fecha de hoy:', hoy);
   console.log('👥 Alumnos:', alumnosData);
   console.log('📋 Asistencias:', asistenciasData);
-  
+
   const alumnosIds = alumnosData.map(a => a.id);
   const asistenciaHoy = asistenciasData.filter(a => {
     const match = alumnosIds.includes(a.alumno_id) && a.fecha === hoy;
     console.log(`Filtrando: alumno_id=${a.alumno_id}, fecha=${a.fecha}, match=${match}`);
     return match;
   });
-  
+
   console.log('🎯 Asistencias filtradas para hoy:', asistenciaHoy.length, asistenciaHoy);
-  
+
   if (asistenciaHoy.length === 0) {
     tbody.innerHTML = `<tr><td colspan="4" class="text-center py-5"><i class="fas fa-calendar-plus fa-3x text-muted mb-3"></i><p class="text-muted">Sin asistencias registradas hoy</p></td></tr>`;
     return;
   }
-  
+
   tbody.innerHTML = asistenciaHoy.map(a => {
     const alumno = alumnosData.find(al => al.id === a.alumno_id);
     // Formatear la hora: si es string "HH:MM", mostrar directamente; si es DateTime, extraer hora
@@ -189,13 +195,13 @@ function renderAsistencia() {
         // Es un datetime, extraer la hora
         const fecha = new Date(a.hora_llegada);
         if (!isNaN(fecha)) {
-          horaFormato = fecha.toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'});
+          horaFormato = fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
         }
       }
     }
-    const badge = a.estado === 'presente' ? '<span class="badge badge-presente">Presente</span>' : 
-                  a.estado === 'tardanza' ? '<span class="badge badge-tardanza">Tardanza</span>' : 
-                  '<span class="badge badge-ausente">Ausente</span>';
+    const badge = a.estado === 'presente' ? '<span class="badge badge-presente">Presente</span>' :
+      a.estado === 'tardanza' ? '<span class="badge badge-tardanza">Tardanza</span>' :
+        '<span class="badge badge-ausente">Ausente</span>';
     return `<tr>
       <td><div class="d-flex align-items-center"><div class="avatar-circle me-2">${alumno?.nombre?.charAt(0)}</div><div><div class="fw-medium">${alumno?.nombre}</div><small class="text-muted">${alumno?.edad || 0} años</small></div></div></td>
       <td>${badge}</td>
@@ -212,10 +218,10 @@ function tomarAsistencia() {
   const mes = String(ahora.getMonth() + 1).padStart(2, '0');
   const día = String(ahora.getDate()).padStart(2, '0');
   const fechaLocal = `${año}-${mes}-${día}`;
-  
+
   document.getElementById('fechaAsistencia').value = fechaLocal;
   document.getElementById('horaAsistencia').value = ahora.toTimeString().slice(0, 5);
-  
+
   const tbody = document.getElementById('alumnosAsistenciaList');
   tbody.innerHTML = alumnosData.filter(a => a.activo).map(alumno => {
     const asistenciaExistente = asistenciasData.find(a => a.alumno_id === alumno.id);
@@ -228,7 +234,7 @@ function tomarAsistencia() {
       <td><input type="text" class="form-control form-control-sm" placeholder="Obs..." id="observaciones_${alumno.id}" value="${asistenciaExistente?.observaciones || ''}"></td>
     </tr>`;
   }).join('');
-  
+
   new bootstrap.Modal(document.getElementById('tomarAsistenciaModal')).show();
 }
 
@@ -276,9 +282,12 @@ function guardarAsistencia() {
       if (!res.ok) {
         throw new Error(responseData.error || 'Error guardando asistencia');
       }
-      
+
       showAlert('✅ Asistencia guardada correctamente', 'success');
+
+      // Forzar recarga completa de datos y actualizar UI
       await cargarDatos();
+
       bootstrap.Modal.getInstance(document.getElementById('tomarAsistenciaModal')).hide();
     } catch (e) {
       console.error('❌ Error:', e);
@@ -309,7 +318,7 @@ function mostrarFormularioAlumno(id = null) {
   form.reset();
   document.getElementById('alumnoId').value = '';
   const title = document.getElementById('formularioAlumnoTitle');
-  
+
   if (id) {
     const alumno = alumnosData.find(a => a.id === id);
     if (alumno) {
@@ -437,7 +446,7 @@ function inicializarGraficos() {
 function crearGraficoSemanal() {
   const ctx = document.getElementById('chartSemanal');
   if (!ctx) return;
-  
+
   const labels = [];
   const datos = [];
   for (let i = 6; i >= 0; i--) {
@@ -448,9 +457,9 @@ function crearGraficoSemanal() {
     const presentes = asistenciasData.filter(a => a.fecha === fechaStr && a.estado === 'presente').length;
     datos.push(presentes > 0 ? presentes : 0);
   }
-  
+
   if (chartsInstances.semanal) chartsInstances.semanal.destroy();
-  
+
   try {
     chartsInstances.semanal = new Chart(ctx, {
       type: 'line',
@@ -490,25 +499,25 @@ function crearGraficoSemanal() {
 function crearGraficoDistribucion() {
   const ctx = document.getElementById('chartDistribucion');
   if (!ctx) return;
-  
+
   // Usar fecha local, no UTC
   const ahora = new Date();
   const año = ahora.getFullYear();
   const mes = String(ahora.getMonth() + 1).padStart(2, '0');
   const día = String(ahora.getDate()).padStart(2, '0');
   const hoy = `${año}-${mes}-${día}`;
-  
+
   const alumnosIds = alumnosData.map(a => a.id);
-  const asistenciasClase = asistenciasData.filter(a => 
+  const asistenciasClase = asistenciasData.filter(a =>
     alumnosIds.includes(a.alumno_id) && a.fecha === hoy
   );
-  
+
   const presentes = asistenciasClase.filter(a => a.estado === 'presente').length;
   const tardanzas = asistenciasClase.filter(a => a.estado === 'tardanza').length;
   const ausentes = Math.max(0, alumnosData.length - presentes - tardanzas);
-  
+
   if (chartsInstances.distribucion) chartsInstances.distribucion.destroy();
-  
+
   try {
     chartsInstances.distribucion = new Chart(ctx, {
       type: 'doughnut',
@@ -538,18 +547,18 @@ function crearGraficoDistribucion() {
 function verHistorial() {
   const modal = new bootstrap.Modal(document.getElementById('gestionarAlumnosModal'));
   const tbody = document.getElementById('alumnosTableBody');
-  
+
   const alumnosIds = alumnosData.map(a => a.id);
   const asistenciasClase = asistenciasData.filter(a => alumnosIds.includes(a.alumno_id));
-  
+
   tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">
     <div><h5 class="text-muted">Historial de Asistencias</h5><p class="small text-muted">Total registros: ${asistenciasClase.length}</p></div>
     <table class="table table-sm mt-3"><thead><tr><th>Alumno</th><th>Fecha</th><th>Estado</th><th>Hora</th></tr></thead><tbody>
     ${asistenciasClase.map(a => {
-      const alumno = alumnosData.find(al => al.id === a.alumno_id);
-      const hora = a.hora_llegada ? new Date(a.hora_llegada).toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'}) : '--:--';
-      return `<tr><td>${alumno?.nombre}</td><td>${a.fecha}</td><td><span class="badge ${a.estado === 'presente' ? 'bg-success' : a.estado === 'tardanza' ? 'bg-warning' : 'bg-danger'}">${a.estado}</span></td><td>${hora}</td></tr>`;
-    }).join('')}
+    const alumno = alumnosData.find(al => al.id === a.alumno_id);
+    const hora = a.hora_llegada ? new Date(a.hora_llegada).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '--:--';
+    return `<tr><td>${alumno?.nombre}</td><td>${a.fecha}</td><td><span class="badge ${a.estado === 'presente' ? 'bg-success' : a.estado === 'tardanza' ? 'bg-warning' : 'bg-danger'}">${a.estado}</span></td><td>${hora}</td></tr>`;
+  }).join('')}
     </tbody></table>
   </td></tr>`;
   modal.show();
@@ -561,32 +570,32 @@ function exportarExcel() {
       showAlert('Error: Librería XLSX no cargada', 'danger');
       return;
     }
-    
+
     const fechaSeleccionada = document.getElementById('fechaReporte')?.value;
     const alumnosIds = alumnosData.map(a => a.id);
     let asistenciasClase = asistenciasData.filter(a => alumnosIds.includes(a.alumno_id));
-    
+
     if (fechaSeleccionada) {
       asistenciasClase = asistenciasClase.filter(a => a.fecha === fechaSeleccionada);
     }
-    
+
     if (asistenciasClase.length === 0) {
       showAlert('No hay datos de asistencia para exportar', 'warning');
       return;
     }
-    
+
     const datos = asistenciasClase.map(a => {
       const alumno = alumnosData.find(al => al.id === a.alumno_id);
-      const hora = a.hora_llegada ? new Date(a.hora_llegada).toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'}) : '--:--';
-      return { 
-        Alumno: alumno?.nombre || 'Desconocido', 
+      const hora = a.hora_llegada ? new Date(a.hora_llegada).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '--:--';
+      return {
+        Alumno: alumno?.nombre || 'Desconocido',
         Edad: alumno?.edad || '-',
-        Fecha: a.fecha, 
-        Estado: a.estado.toUpperCase(), 
-        Hora: hora 
+        Fecha: a.fecha,
+        Estado: a.estado.toUpperCase(),
+        Hora: hora
       };
     });
-    
+
     const ws = XLSX.utils.json_to_sheet(datos);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Asistencias");
@@ -606,36 +615,36 @@ function exportarPDF() {
       showAlert('Error: Librería jsPDF no cargada', 'danger');
       return;
     }
-    
+
     const fechaSeleccionada = document.getElementById('fechaReporte')?.value;
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    
+
     doc.setFontSize(16);
     doc.text('Reporte de Asistencias - IEBM', 20, 20);
-    
+
     doc.setFontSize(11);
     doc.text(`Clase: ${maestroData.clase}`, 20, 30);
     doc.text(`Maestro: ${maestroData.nombre}`, 20, 38);
     const fechaFormato = fechaSeleccionada ? new Date(fechaSeleccionada).toLocaleDateString('es-ES') : new Date().toLocaleDateString('es-ES');
     doc.text(`Fecha: ${fechaFormato}`, 20, 46);
-    
+
     const alumnosIds = alumnosData.map(a => a.id);
     let asistenciasClase = asistenciasData.filter(a => alumnosIds.includes(a.alumno_id));
-    
+
     if (fechaSeleccionada) {
       asistenciasClase = asistenciasClase.filter(a => a.fecha === fechaSeleccionada);
     }
-    
+
     if (asistenciasClase.length === 0) {
       showAlert('No hay datos de asistencia para exportar', 'warning');
       return;
     }
-    
+
     const presentes = asistenciasClase.filter(a => a.estado === 'presente').length;
     const tardanzas = asistenciasClase.filter(a => a.estado === 'tardanza').length;
     const ausentes = asistenciasClase.filter(a => a.estado === 'ausente').length;
-    
+
     let y = 55;
     doc.setFontSize(12);
     doc.text('Resumen:', 20, y);
@@ -648,12 +657,12 @@ function exportarPDF() {
     doc.text(`Tardanzas: ${tardanzas}`, 25, y);
     y += 6;
     doc.text(`Ausentes: ${ausentes}`, 25, y);
-    
+
     y += 10;
     doc.setFontSize(11);
     doc.text('Detalle de Asistencia:', 20, y);
     y += 8;
-    
+
     doc.setFontSize(9);
     doc.setFont(undefined, 'bold');
     doc.text('Alumno', 25, y);
@@ -661,20 +670,20 @@ function exportarPDF() {
     doc.text('Hora', 110, y);
     doc.setFont(undefined, 'normal');
     y += 6;
-    
+
     asistenciasClase.forEach(a => {
       const alumno = alumnosData.find(al => al.id === a.alumno_id);
-      const hora = a.hora_llegada ? new Date(a.hora_llegada).toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'}) : '--:--';
+      const hora = a.hora_llegada ? new Date(a.hora_llegada).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '--:--';
       doc.text(`${alumno?.nombre || 'Desconocido'}`, 25, y);
       doc.text(`${a.estado.toUpperCase()}`, 80, y);
       doc.text(`${hora}`, 110, y);
       y += 6;
-      if (y > 270) { 
-        doc.addPage(); 
-        y = 20; 
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
       }
     });
-    
+
     const fecha = fechaSeleccionada || new Date().toISOString().split('T')[0];
     doc.save(`reporte_${maestroData.clase}_${fecha}.pdf`);
     showAlert('PDF descargado correctamente', 'success');
@@ -716,7 +725,7 @@ function actualizarFecha() {
 function configurarEventos() {
   const buscador = document.getElementById('buscarAlumno');
   if (buscador) {
-    buscador.addEventListener('input', function() {
+    buscador.addEventListener('input', function () {
       const texto = this.value.toLowerCase();
       document.querySelectorAll('#alumnosTableBody tr').forEach(fila => {
         const nombre = fila.querySelector('td')?.textContent.toLowerCase() || '';
