@@ -121,7 +121,9 @@ async function ensureAlumnoColumns() {
 
 async function insertDefaultData() {
   try {
-    // Insertar maestros por defecto
+    const bcrypt = require('bcryptjs');
+    
+    // Insertar maestros por defecto con contraseñas hasheadas
     const maestros = [
       ['Raquel Cubas', 'raquel@iebm.com', '123456', 'parvulos'],
       ['Sahara Homero', 'sahara@iebm.com', '123456', 'intermedios'],
@@ -131,10 +133,12 @@ async function insertDefaultData() {
     ];
 
     for (const maestro of maestros) {
+      // Hashear la contraseña antes de insertar
+      const hashedPassword = await bcrypt.hash(maestro[2], 10);
       await connection.execute(`
         INSERT IGNORE INTO maestros (nombre, email, password, clase) 
         VALUES (?, ?, ?, ?)
-      `, maestro);
+      `, [maestro[0], maestro[1], hashedPassword, maestro[3]]);
     }
 
     // NO insertar alumnos de ejemplo - solo los que el usuario cree

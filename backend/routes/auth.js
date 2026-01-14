@@ -49,14 +49,14 @@ router.post('/login', async (req, res) => {
 
     // Verificar credenciales en la BD
     const maestro = await Maestro.verifyCredentials(email, password);
-    
+
     if (!maestro) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
     // Generar token JWT con datos del maestro
     const token = jwt.sign(
-      { 
+      {
         id: maestro.id,
         nombre: maestro.nombre,
         email: maestro.email,
@@ -130,15 +130,19 @@ router.put('/change-password', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Maestro no encontrado' });
     }
 
-    // Verificar contraseña actual
-    if (currentPassword !== rows[0].password) {
+    // Verificar contraseña actual usando bcrypt
+    const isValidPassword = await bcrypt.compare(currentPassword, rows[0].password);
+    if (!isValidPassword) {
       return res.status(401).json({ error: 'Contraseña actual incorrecta' });
     }
+
+    // Hashear la nueva contraseña antes de guardarla
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Actualizar contraseña
     await connection.execute(
       'UPDATE maestros SET password = ? WHERE id = ?',
-      [newPassword, maestroId]
+      [hashedPassword, maestroId]
     );
 
     res.json({ success: true, message: 'Contraseña actualizada correctamente' });

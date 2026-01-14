@@ -21,6 +21,17 @@ const reportesRoutes = require('./routes/reportes');  // Exportación de reporte
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Validar que JWT_SECRET esté configurado correctamente
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'your-super-secret-jwt-key-change-this-in-production-use-long-random-string') {
+  console.error('❌ ERROR: JWT_SECRET no está configurado o usa el valor por defecto');
+  console.error('Por favor, configura JWT_SECRET en tu archivo .env con un valor seguro');
+  if (process.env.NODE_ENV === 'production') {
+    process.exit(1); // Detener en producción
+  } else {
+    console.warn('⚠️ ADVERTENCIA: Continuando en modo desarrollo con JWT_SECRET inseguro');
+  }
+}
+
 // Configurar CORS para permitir solicitudes desde el frontend
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
@@ -68,7 +79,7 @@ app.get('/dashboard', (req, res) => {
 // Manejo de errores global - captura cualquier error en la API
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
+  res.status(500).json({
     error: 'Algo salió mal!',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Error interno del servidor'
   });
@@ -84,7 +95,7 @@ async function startServer() {
     console.warn('⚠️ No se pudo conectar a MySQL. Ejecutando en modo demo.');
     console.warn('Detalles:', error.message);
   }
-  
+
   // Escuchar en el puerto especificado
   app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

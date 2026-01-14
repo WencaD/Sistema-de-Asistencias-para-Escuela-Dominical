@@ -1,7 +1,7 @@
 const { getConnection } = require('../config/database');
 
 class Maestro {
-  
+
   // Buscar maestro por email
   static async findByEmail(email) {
     try {
@@ -46,14 +46,16 @@ class Maestro {
   // Verificar credenciales de login
   static async verifyCredentials(email, password) {
     try {
+      const bcrypt = require('bcryptjs');
       const maestro = await this.findByEmail(email);
-      
+
       if (!maestro) {
         return null;
       }
 
-      // Verificar contraseña (por ahora sin hash)
-      if (password !== maestro.password) {
+      // Verificar contraseña usando bcrypt
+      const isValidPassword = await bcrypt.compare(password, maestro.password);
+      if (!isValidPassword) {
         return null;
       }
 
@@ -68,10 +70,15 @@ class Maestro {
   // Cambiar contraseña
   static async changePassword(id, newPassword) {
     try {
+      const bcrypt = require('bcryptjs');
       const connection = getConnection();
+
+      // Hashear la nueva contraseña antes de guardarla
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
       const [result] = await connection.execute(
         'UPDATE maestros SET password = ? WHERE id = ?',
-        [newPassword, id]
+        [hashedPassword, id]
       );
       return result.affectedRows > 0;
     } catch (error) {
@@ -82,17 +89,23 @@ class Maestro {
   // Crear nuevo maestro
   static async create(maestroData) {
     try {
+      const bcrypt = require('bcryptjs');
       const { nombre, email, password, clase } = maestroData;
       const connection = getConnection();
-      
+
+      // Hashear la contraseña antes de guardarla
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const [result] = await connection.execute(
         'INSERT INTO maestros (nombre, email, password, clase) VALUES (?, ?, ?, ?)',
-        [nombre, email, password, clase]
+        [nombre, email, hashedPassword, clase]
       );
-      
+
       return {
         id: result.insertId,
-        ...maestroData
+        nombre,
+        email,
+        clase
       };
     } catch (error) {
       throw error;
@@ -104,12 +117,12 @@ class Maestro {
     try {
       const { nombre, email, clase } = maestroData;
       const connection = getConnection();
-      
+
       const [result] = await connection.execute(
         'UPDATE maestros SET nombre = ?, email = ?, clase = ? WHERE id = ?',
         [nombre, email, clase, id]
       );
-      
+
       return result.affectedRows > 0;
     } catch (error) {
       throw error;
@@ -120,7 +133,7 @@ class Maestro {
   static async getStatsByClase(clase) {
     try {
       const connection = getConnection();
-      
+
       // Total de alumnos
       const [alumnosCount] = await connection.execute(
         'SELECT COUNT(*) as total FROM alumnos WHERE clase = ? AND activo = 1',
@@ -130,7 +143,7 @@ class Maestro {
       // Asistencias del mes
       const inicioMes = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
       const finMes = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
-      
+
       const [asistenciasMes] = await connection.execute(`
         SELECT 
           COUNT(*) as total,

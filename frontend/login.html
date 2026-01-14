@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,45 +16,54 @@
             --iebm-light: #f8f9fa;
             --iebm-dark: #2c3e50;
         }
+
         .login-container {
             background: linear-gradient(135deg, var(--iebm-light) 0%, #e9ecef 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
         }
+
         .login-card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
+
         .login-logo img {
             max-width: 80px;
             height: auto;
         }
+
         .btn-iebm {
             background: linear-gradient(135deg, var(--iebm-primary), var(--iebm-secondary));
             border: none;
             color: white;
             transition: all 0.3s ease;
         }
+
         .btn-iebm:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(32, 178, 170, 0.3);
             color: white;
         }
+
         .text-iebm {
             color: var(--iebm-primary) !important;
         }
+
         .badge-iebm {
             background-color: var(--iebm-primary);
         }
+
         .form-control:focus {
             border-color: var(--iebm-primary);
             box-shadow: 0 0 0 0.2rem rgba(32, 178, 170, 0.25);
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="container">
@@ -80,8 +90,8 @@
                                     <label for="email" class="form-label">
                                         <i class="fas fa-envelope me-2 text-iebm"></i>Email
                                     </label>
-                                    <input type="email" class="form-control" id="email" required 
-                                           placeholder="maestro@iebm.com">
+                                    <input type="email" class="form-control" id="email" required
+                                        placeholder="maestro@iebm.com">
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -89,10 +99,11 @@
                                         <i class="fas fa-lock me-2 text-iebm"></i>Contraseña
                                     </label>
                                     <div class="position-relative">
-                                        <input type="password" class="form-control" id="password" required 
-                                               placeholder="••••••••">
-                                        <button type="button" class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2 text-iebm" 
-                                                id="togglePassword" style="border: none; background: none;">
+                                        <input type="password" class="form-control" id="password" required
+                                            placeholder="••••••••">
+                                        <button type="button"
+                                            class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2 text-iebm"
+                                            id="togglePassword" style="border: none; background: none;">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
@@ -120,17 +131,6 @@
                                     </a>
                                 </div>
                             </form>
-
-                            <!-- Información de acceso demo -->
-                            <div class="mt-5 p-3 bg-light rounded">
-                                <h6 class="text-primary mb-3">Cuentas de Prueba</h6>
-                                <small class="text-muted d-block">
-                                    <div class="mb-2"><span class="text-primary" style="cursor:pointer;">raquel.cubas@iebm.com / password123</span></div>
-                                    <div class="mb-2"><span class="text-primary" style="cursor:pointer;">sahara.homero@iebm.com / password123</span></div>
-                                    <div class="mb-2"><span class="text-primary" style="cursor:pointer;">karen.cuellar@iebm.com / password123</span></div>
-                                    <div class="mb-0"><span class="text-primary" style="cursor:pointer;">omar.esteban@iebm.com / password123</span></div>
-                                </small>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,4 +142,5 @@
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
 </body>
+
 </html>
