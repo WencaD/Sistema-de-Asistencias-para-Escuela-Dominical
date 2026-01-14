@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEBM - Sistema de Asistencias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#inicio">
+                <img src="img/IEBM_logo-PNG.png" alt="IEBM Logo" class="iebm-logo-navbar me-2">
+                <div>
+                    <strong class="text-iebm">IEBM</strong><br>
+                    <small class="text-muted">Escuela Dominical</small>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item ms-3 d-none d-lg-block">
+                        <span class="badge badge-iebm">
+                            Somos una gran familia en Cristo
+                        </span>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="#inicio">
+                            Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="#clases">
+                            Clases
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="#galeria">
+                            Galería
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="#nosotros">
+                            Horario
+                        </a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-iebm" href="#" onclick="irAlLogin(event)">
+                            ACCESO MAESTROS
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section d-flex align-items-center" id="inicio">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="mb-4">
+                        <span class="badge badge-iebm fs-6 px-3 py-2">
+                            <i class="fas fa-star me-2"></i>Iglesia Evangélica Bautista Misionera
+                        </span>
+                    </div>
+                    <h1 class="display-3 fw-bold mb-4" style="color: var(--iebm-dark);">
+                        Sistema de Asistencias <span class="gradient-text">IEBM</span>
+                    </h1>
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fas fa-heart text-iebm me-2"></i>
+                        <h5 class="text-iebm mb-0">"Formando Discípulos para Cristo"</h5>
+                    </div>
+                    <p class="lead mb-4 text-muted">
+                        Gestión moderna y confiable de asistencia para la Escuela Dominical de la Iglesia Evangélica Bautista Misionera.
+                    </p>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-circle bg-iebm-light text-iebm me-3">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <strong style="color: var(--iebm-dark);">Domingos</strong><br>
+                                    <small class="text-muted">10:00 AM - 11:00 AM</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-circle bg-iebm-light text-iebm me-3">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <strong style="color: var(--iebm-dark);">Jr. Maraña #401</strong><br>
+                                    <small class="text-muted">Rímac, Lima</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+                        <a href="#clases" class="btn btn-iebm btn-lg">
+                            <i class="fas fa-users me-2"></i>VER CLASES
+                        </a>
+                        <a href="login.html" class="btn btn-outline-dark btn-lg" onclick="clearAuthSession()">
+                            <i class="fas fa-sign-in-alt me-2"></i>ACCESO
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center mt-5 mt-lg-0">
+                    <div class="position-relative">
+                        <div class="hero-image-container">
+                            <img src="img/IEBM_iso-PNG.png" alt="IEBM Logo" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Horarios Section -->
+    <section class="py-5" style="background: var(--white); margin-top: 80px;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="text-primary">Horarios de Clases</h2>
+                <p class="lead">Toda la familia puede reunirse en un mismo horario</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <div class="row text-center">
+                                <div class="col-md-3 mb-3">
+                                    <div class="p-3 border rounded">
+                                        <i class="fas fa-clock fa-2x text-primary mb-2"></i>
+                                        <h5>Horario Único</h5>
+                                        <p class="mb-0"><strong>10:00 AM - 11:00 AM</strong></p>
+                                        <small class="text-muted">Domingos</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="p-3 border rounded">
+                                        <i class="fas fa-hourglass-half fa-2x text-warning mb-2"></i>
+                                        <h5>Tolerancia</h5>
+                                        <p class="mb-0"><strong>8 minutos</strong></p>
+                                        <small class="text-muted">Hasta 10:08 AM</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="p-3 border rounded">
+                                        <i class="fas fa-map-marker-alt fa-2x text-success mb-2"></i>
+                                        <h5>Ubicación</h5>
+                                        <p class="mb-0"><strong>IEBM</strong></p>
+                                        <small class="text-muted">Aulas designadas</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="p-3 border rounded">
+                                        <i class="fas fa-users fa-2x text-info mb-2"></i>
+                                        <h5>Clases</h5>
+                                        <p class="mb-0"><strong>4 Grupos</strong></p>
+                                        <small class="text-muted">Por edades</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clases Section -->
+    <section class="py-5 bg-light" id="clases">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="text-primary">Nuestras Clases</h2>
+                <p class="lead">Formación espiritual para todas las edades</p>
+            </div>
+            
+            <div class="row">
+                <!-- Párvulos -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center">
+                            <i class="fas fa-baby fa-3x mb-3"></i>
+                            <h4>Párvulos</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="text-primary">Raquel Cubas</h5>
+                            <p class="text-muted">Maestra</p>
+                            <hr>
+                            <p><strong>Edades:</strong> 3-6 años</p>
+                            <p><strong>Enfoque:</strong> Introducción al amor de Dios mediante historias, canciones y juegos</p>
+                            <div class="mt-3">
+                                <span class="badge badge-presente">Activa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intermedios -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center">
+                            <i class="fas fa-child fa-3x mb-3"></i>
+                            <h4>Intermedios</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="text-primary">Sahara Homero</h5>
+                            <p class="text-muted">Maestra</p>
+                            <hr>
+                            <p><strong>Edades:</strong> 7-11 años</p>
+                            <p><strong>Enfoque:</strong> Principios cristianos, conocimiento bíblico y vida en comunidad</p>
+                            <div class="mt-3">
+                                <span class="badge badge-presente">Activa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adolescentes -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center">
+                            <i class="fas fa-user-graduate fa-3x mb-3"></i>
+                            <h4>Adolescentes</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="text-primary">Karen Cuéllar</h5>
+                            <p class="text-muted">Maestra</p>
+                            <hr>
+                            <p><strong>Edades:</strong> 12-17 años</p>
+                            <p><strong>Enfoque:</strong> Desarrollo de liderazgo, estudio bíblico profundo y formación integral</p></p>
+                            <div class="mt-3">
+                                <span class="badge badge-presente">Activa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Adultos -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header text-center">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <h4>Adultos</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="text-primary">Omar Esteban</h5>
+                            <p class="text-muted">Maestro</p>
+                            <hr>
+                            <p><strong>Edades:</strong> 18+ años</p>
+                            <p><strong>Enfoque:</strong> Crecimiento espiritual, estudio bíblico aplicado y vida en fe</p></p>
+                            <div class="mt-3">
+                                <span class="badge badge-presente">Activa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería IEBM -->
+    <section class="py-5 bg-iebm-light" id="galeria">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="gradient-text mb-3">Nuestra Comunidad IEBM</h2>
+                <hr class="divider-iebm">
+                <p class="lead text-muted">Momentos especiales de nuestra iglesia</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <img src="img/IEBM_aniversario.jpg" class="card-img-top" alt="Aniversario IEBM">
+                        <div class="card-body">
+                            <h5 class="card-title text-iebm">Celebración de Aniversario</h5>
+                            <p class="card-text">Momentos especiales celebrando la fidelidad de Dios en nuestra iglesia.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <img src="img/IEBM_bautizo.jpg" class="card-img-top" alt="Bautizos IEBM">
+                        <div class="card-body">
+                            <h5 class="card-title text-iebm">Bautismos</h5>
+                            <p class="card-text">Testigos del nuevo nacimiento en Cristo de nuestros hermanos.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <img src="img/IEBM_fiestaspatrias.jpg" class="card-img-top" alt="Fiestas Patrias IEBM">
+                        <div class="card-body">
+                            <h5 class="card-title text-iebm">Fiestas Patrias</h5>
+                            <p class="card-text">Celebrando nuestra identidad peruana con valores cristianos.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <img src="img/IEBM_orando.jpg" class="card-img-top" alt="Oración IEBM">
+                        <div class="card-body">
+                            <h5 class="card-title text-iebm">Vida de Oración</h5>
+                            <p class="card-text">Unidos en oración, buscando la presencia del Señor.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 bg-iebm text-white">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-5">
+                            <i class="fas fa-heart fa-4x mb-4"></i>
+                            <h5 class="card-title">Somos una Gran Familia</h5>
+                            <p class="card-text">Cada domingo nos reunimos para adorar, aprender y crecer juntos en Cristo.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <div class="card h-100 bg-light">
+                        <div class="card-body d-flex flex-column justify-content-center align-items-center text-center p-4">
+                            <img src="img/IEBM_iso-PNG.png" alt="Logo IEBM" class="mb-3" style="max-height: 120px;">
+                            <h5 class="card-title text-iebm">Iglesia Evangélica<br>Bautista Misionera</h5>
+                            <p class="card-text text-muted"><i class="fas fa-map-marker-alt me-2"></i>Jr. Maraña #401, Rímac</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre Nosotros -->
+    <section class="py-5" id="nosotros">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="text-primary mb-4">Sobre Nuestra Escuela Dominical</h2>
+                    <p class="lead">
+                        La Escuela Dominical de IEBM es un ministerio dedicado a la enseñanza de la Palabra de Dios 
+                        para todas las edades.
+                    </p>
+                    <p>
+                        Nuestro objetivo es proporcionar una educación cristiana sólida, basada en principios bíblicos, 
+                        que forme el carácter y fortalezca la fe de cada participante.
+                    </p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-success me-3 fa-2x"></i>
+                                <div>
+                                    <h6 class="mb-0">Enseñanza Bíblica</h6>
+                                    <small class="text-muted">Basada en las Escrituras</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-heart text-danger me-3 fa-2x"></i>
+                                <div>
+                                    <h6 class="mb-0">Amor y Cuidado</h6>
+                                    <small class="text-muted">Ambiente familiar</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-hands-helping text-warning me-3 fa-2x"></i>
+                                <div>
+                                    <h6 class="mb-0">Servicio</h6>
+                                    <small class="text-muted">Formando servidores</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-seedling text-success me-3 fa-2x"></i>
+                                <div>
+                                    <h6 class="mb-0">Crecimiento</h6>
+                                    <small class="text-muted">Espiritual y personal</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="img/IEBM_orando.jpg" alt="Escuela Dominical" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="img/IEBM_iso-PNG.png" alt="Logo IEBM" style="height: 50px;" class="me-3">
+                        <div>
+                            <h5 class="text-iebm-secondary mb-0">IEBM</h5>
+                            <small class="text-muted">Iglesia Evangélica Bautista Misionera</small>
+                        </div>
+                    </div>
+                    <p class="text-light">Sistema de Asistencias - Escuela Dominical</p>
+                    <p class="text-muted">"Y Jesús se acercó y les habló diciendo: Toda potestad me es dada en el cielo y en la tierra."</p>
+                    <small class="text-muted">- Mateo 28:18</small>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h5 class="text-iebm-secondary mb-3">Información</h5>
+                    <div class="d-flex align-items-start mb-2">
+                        <i class="fas fa-map-marker-alt text-iebm-secondary me-3 mt-1"></i>
+                        <div>
+                            <strong>Dirección:</strong><br>
+                            <span class="text-light">Jr. Maraña #401, Rímac<br>Lima, Perú</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-2">
+                        <i class="fas fa-clock text-iebm-secondary me-3 mt-1"></i>
+                        <div>
+                            <strong>Escuela Dominical:</strong><br>
+                            <span class="text-light">Domingos: 10:00 AM - 11:00 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h5 class="text-iebm-secondary mb-3">Contacto</h5>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-envelope text-iebm-secondary me-3"></i>
+                        <span class="text-light">escuela.dominical@iebm.com</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fas fa-phone text-iebm-secondary me-3"></i>
+                        <span class="text-light">+51 945 632 128</span>
+                    </div>
+                    
+                    <h6 class="text-iebm-secondary mb-3">Síguenos en Redes Sociales</h6>
+                    <div class="d-flex gap-3">
+                        <a href="https://www.facebook.com/IebmDelRimac" target="_blank" rel="noopener" class="btn btn-social btn-facebook" title="Síguenos en Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/iebmrimac?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" class="btn btn-social btn-instagram" title="Síguenos en Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://twitter.com/iebmrimac" target="_blank" rel="noopener" class="btn btn-social btn-twitter" title="Síguenos en Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://wa.me/51945632128" target="_blank" rel="noopener" class="btn btn-social btn-whatsapp" title="Contáctanos por WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4 opacity-25">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-muted">&copy; 2024 IEBM - Iglesia Evangélica Bautista Misionera. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 text-iebm-secondary">
+                        <i class="fas fa-heart me-1"></i>
+                        Desarrollado con amor para la gloria de Dios
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
