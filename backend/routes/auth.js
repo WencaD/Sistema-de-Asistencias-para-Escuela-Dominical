@@ -47,12 +47,17 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
     }
 
+    console.log('Intento de login para:', email);
+
     // Verificar credenciales en la BD
     const maestro = await Maestro.verifyCredentials(email, password);
 
     if (!maestro) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
+      console.warn('Login fallido: Credenciales inválidas para', email);
+      return res.status(401).json({ error: 'Credenciales inválidas', message: 'Email o contraseña incorrectos' });
     }
+
+    console.log('Login exitoso para:', email);
 
     // Generar token JWT con datos del maestro
     const token = jwt.sign(
@@ -88,7 +93,10 @@ router.post('/login', async (req, res) => {
 
   } catch (error) {
     console.error('Error en login:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({
+      error: 'Error interno del servidor',
+      message: error.message
+    });
   }
 });
 

@@ -4,7 +4,7 @@ let submitText;
 let submitSpinner;
 let alertContainer;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeElements();
     setupEventListeners();
     checkExistingLogin();
@@ -36,7 +36,7 @@ function setupEventListeners() {
     if (rememberCheckbox) {
         rememberCheckbox.addEventListener('change', handleRememberMe);
         loadSavedCredentials();
-    }    
+    }
     // Quick login buttons para demo
     setupQuickLoginButtons();
 }
@@ -48,16 +48,16 @@ function setupQuickLoginButtons() {
         if (text.includes('@') && text.includes(' / ')) {
             div.style.cursor = 'pointer';
             div.style.transition = 'background-color 0.2s';
-            div.addEventListener('click', function(e) {
+            div.addEventListener('click', function (e) {
                 e.stopPropagation();
                 const parts = text.split(' / ');
                 if (parts.length >= 2) {
                     const email = parts[0].trim();
                     const password = parts[1].trim();
-                    
+
                     const emailField = document.getElementById('email');
                     const passwordField = document.getElementById('password');
-                    
+
                     if (emailField && passwordField) {
                         emailField.value = email;
                         passwordField.value = password;
@@ -65,10 +65,10 @@ function setupQuickLoginButtons() {
                     }
                 }
             });
-            div.addEventListener('mouseover', function() {
+            div.addEventListener('mouseover', function () {
                 this.style.backgroundColor = '#e0f7f6';
             });
-            div.addEventListener('mouseout', function() {
+            div.addEventListener('mouseout', function () {
                 this.style.backgroundColor = 'transparent';
             });
         }
@@ -77,7 +77,7 @@ function setupQuickLoginButtons() {
 
 async function handleLogin(event) {
     event.preventDefault();
-    
+
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
     const rememberMe = document.getElementById('rememberMe').checked;
@@ -127,12 +127,13 @@ async function handleLogin(event) {
             }, 1000);
 
         } else {
-            showAlert(data.message || 'Credenciales inv�lidas', 'danger');
+            const errorMsg = data.error || data.message || 'Credenciales inválidas';
+            showAlert(errorMsg, 'danger');
         }
 
     } catch (error) {
         console.error('Error en login:', error);
-        showAlert('Error de conexi�n. Por favor, int�ntelo de nuevo.', 'danger');
+        showAlert('Error de conexión. Por favor, inténtelo de nuevo.', 'danger');
     } finally {
         setLoadingState(false);
     }
@@ -188,7 +189,7 @@ function clearAlert() {
 function togglePasswordVisibility() {
     const passwordInput = document.getElementById('password');
     const toggleIcon = document.querySelector('#togglePassword i');
-    
+
     if (passwordInput && toggleIcon) {
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
@@ -205,7 +206,7 @@ function togglePasswordVisibility() {
 // ===== RECORDAR CREDENCIALES =====
 function handleRememberMe() {
     const rememberCheckbox = document.getElementById('rememberMe');
-    
+
     if (rememberCheckbox && !rememberCheckbox.checked) {
         clearSavedCredentials();
     }
@@ -221,11 +222,11 @@ function saveCredentials(email, password) {
 function loadSavedCredentials() {
     const rememberedEmail = localStorage.getItem('rememberedEmail');
     const hasRememberedCredentials = localStorage.getItem('hasRememberedCredentials');
-    
+
     if (rememberedEmail && hasRememberedCredentials) {
         const emailInput = document.getElementById('email');
         const rememberCheckbox = document.getElementById('rememberMe');
-        
+
         if (emailInput) emailInput.value = rememberedEmail;
         if (rememberCheckbox) rememberCheckbox.checked = true;
     }
@@ -239,10 +240,10 @@ function clearSavedCredentials() {
 // ===== VERIFICACI�N DE LOGIN EXISTENTE =====
 function checkExistingLogin() {
     const token = localStorage.getItem('authToken');
-    const currentPath = window.location.pathname;    const fromIndex = document.referrer.includes('index.html') || sessionStorage.getItem('fromIndex');
-    
+    const currentPath = window.location.pathname; const fromIndex = document.referrer.includes('index.html') || sessionStorage.getItem('fromIndex');
+
     console.log('checkExistingLogin - token:', !!token, 'currentPath:', currentPath, 'fromIndex:', fromIndex);
-    
+
     // Si viene desde index.html, forzar logout completo
     if (fromIndex) {
         console.log('Detectado acceso desde index.html - Limpiando sesión...');
@@ -250,13 +251,13 @@ function checkExistingLogin() {
         sessionStorage.clear();
         sessionStorage.removeItem('fromIndex');
         return false;
-    }    
+    }
     // Solo redirigir automáticamente si el token es válido Y si viene de una página que requiere autenticación
     if (token && currentPath === '/dashboard') {
         // Si está en dashboard y tiene token, verificar si es válido
         return verifyTokenValidity();
     }
-    
+
     // No redirigir automáticamente desde login, dejar que el usuario ingrese credenciales
     return false;
 }
@@ -265,7 +266,7 @@ function checkExistingLogin() {
 async function verifyTokenValidity() {
     const token = localStorage.getItem('authToken');
     if (!token) return false;
-    
+
     try {
         const response = await fetch('/api/auth/verify', {
             headers: {
@@ -273,13 +274,13 @@ async function verifyTokenValidity() {
                 'Content-Type': 'application/json'
             }
         });
-        
+
         if (!response.ok) {
             // Token inválido, limpiar localStorage
             logout();
             return false;
         }
-        
+
         return true;
     } catch (error) {
         console.error('Error verificando token:', error);
@@ -300,7 +301,7 @@ function logout() {
     localStorage.removeItem('maestroData');
     localStorage.removeItem('rememberedEmail');
     localStorage.removeItem('hasRememberedCredentials');
-    
+
     // Redirigir a la página principal, no al login directamente
     window.location.replace('/');
 }
