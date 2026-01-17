@@ -226,11 +226,31 @@ function tomarAsistencia() {
   tbody.innerHTML = alumnosData.filter(a => a.activo).map(alumno => {
     const asistenciaExistente = asistenciasData.find(a => a.alumno_id === alumno.id);
     const estado = asistenciaExistente?.estado || '';
+
+    // Si ya tiene una hora registrada, usarla. Si no, usar la hora actual del modal.
+    const horaAlumno = asistenciaExistente?.hora_llegada ?
+      (typeof asistenciaExistente.hora_llegada === 'string' && asistenciaExistente.hora_llegada.includes(':') ?
+        asistenciaExistente.hora_llegada :
+        new Date(asistenciaExistente.hora_llegada).toTimeString().slice(0, 5)) :
+      document.getElementById('horaAsistencia').value;
+
     return `<tr data-alumno-id="${alumno.id}">
       <td><div class="d-flex align-items-center"><div class="avatar-circle me-2">${alumno.nombre.charAt(0)}</div><span>${alumno.nombre}</span></div></td>
-      <td><input type="radio" name="estado_${alumno.id}" value="presente" ${estado === 'presente' ? 'checked' : ''}> Presente</td>
-      <td><input type="radio" name="estado_${alumno.id}" value="tardanza" ${estado === 'tardanza' ? 'checked' : ''}> Tardanza</td>
-      <td><input type="radio" name="estado_${alumno.id}" value="ausente" ${estado === 'ausente' ? 'checked' : ''}> Ausente</td>
+      <td class="text-center">
+        <div class="btn-group" role="group">
+          <input type="radio" class="btn-check" name="estado_${alumno.id}" id="pres_${alumno.id}" value="presente" ${estado === 'presente' ? 'checked' : ''}>
+          <label class="btn btn-outline-success btn-sm" for="pres_${alumno.id}">P</label>
+          
+          <input type="radio" class="btn-check" name="estado_${alumno.id}" id="tard_${alumno.id}" value="tardanza" ${estado === 'tardanza' ? 'checked' : ''}>
+          <label class="btn btn-outline-warning btn-sm" for="tard_${alumno.id}">T</label>
+          
+          <input type="radio" class="btn-check" name="estado_${alumno.id}" id="aus_${alumno.id}" value="ausente" ${estado === 'ausente' ? 'checked' : ''}>
+          <label class="btn btn-outline-danger btn-sm" for="aus_${alumno.id}">F</label>
+        </div>
+      </td>
+      <td>
+        <input type="time" class="form-control form-control-sm" id="hora_${alumno.id}" value="${horaAlumno}">
+      </td>
       <td><input type="text" class="form-control form-control-sm" placeholder="Obs..." id="observaciones_${alumno.id}" value="${asistenciaExistente?.observaciones || ''}"></td>
     </tr>`;
   }).join('');
@@ -252,10 +272,11 @@ function guardarAsistencia() {
     const asistenciasAGuardar = [];
     alumnosData.filter(a => a.activo).forEach(alumno => {
       const radio = document.querySelector(`input[name="estado_${alumno.id}"]:checked`);
+      const horaAlumno = document.getElementById(`hora_${alumno.id}`).value;
       if (radio) {
         asistenciasAGuardar.push({
           alumno_id: alumno.id,
-          hora_llegada: hora,
+          hora_llegada: horaAlumno || hora,
           estado: radio.value,
           observaciones: document.getElementById(`observaciones_${alumno.id}`).value || ''
         });
@@ -411,28 +432,68 @@ function confirmarEliminar(id) {
   })();
 }
 
-function editarAsistencia(id) {
+async function editarAsistencia(id) {
   const a = asistenciasData.find(x => x.id === id);
   if (!a) return;
   const alumno = alumnosData.find(al => al.id === a.alumno_id);
-  const estado = prompt(`Editar asistencia de ${alumno?.nombre}\n(presente/tardanza/ausente):`);
-  if (estado && ['presente', 'tardanza', 'ausente'].includes(estado)) {
-    a.estado = estado;
-    renderAsistencia();
-    actualizarEstadisticas();
-    showAlert('Asistencia actualizada', 'success');
+
+  const nuevoEstado = prompt(`Editar asistencia de ${alumno?.nombre}\n(presente/tardanza/ausente):`, a.estado);
+  if (nuevoEstado && ['presente', 'tardanza', 'ausente'].includes(nuevoEstado)) {
+    const token = localStorage.getItem('authToken');
+    try {
+      const res = await fetch('/api/asistencias', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({
+          alumno_id: a.alumno_id,
+          fecha: a.fecha,
+          hora_llegada: a.hora_llegada,
+          estado: nuevoEstado,
+          observaciones: a.observaciones
+        })
+      });
+
+      if (res.ok) {
+        showAlert('✅ Asistencia actualizada correctamente', 'success');
+        await cargarDatos();
+      } else {
+        throw new Error('Error al actualizar en el servidor');
+      }
+    } catch (e) {
+      showAlert('Error: ' + e.message, 'danger');
+    }
   }
 }
 
-function eliminarAsistencia(id) {
+async function eliminarAsistencia(id) {
   const a = asistenciasData.find(x => x.id === id);
   if (!a) return;
   const alumno = alumnosData.find(al => al.id === a.alumno_id);
-  if (confirm(`¿Eliminar asistencia de ${alumno?.nombre}?`)) {
-    asistenciasData = asistenciasData.filter(x => x.id !== id);
-    renderAsistencia();
-    actualizarEstadisticas();
-    showAlert('Asistencia eliminada', 'success');
+
+  if (confirm(`¿Eliminar definitivamente la asistencia de ${alumno?.nombre}?`)) {
+    const token = localStorage.getItem('authToken');
+    try {
+      // Usamos el endpoint de eliminar si existe, o una marca en el POST
+      // Dado que no hay endpoint DELETE explícito para asistencia en el backend actual, 
+      // pero sí hay un modelo Alumno.js con delete, asumiremos que necesitamos registrarla como 'ausente' o similar,
+      // o mejor, crear el endpoint si es necesario. Por ahora, si no hay DELETE, lanzamos alerta.
+
+      showAlert('⚠️ La eliminación directa no está disponible. Cambie el estado a "Ausente" o edítela.', 'warning');
+
+      /* 
+      // Si existiera el endpoint:
+      const res = await fetch(`/api/asistencias/${a.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        showAlert('Asistencia eliminada', 'success');
+        await cargarDatos();
+      } 
+      */
+    } catch (e) {
+      showAlert('Error: ' + e.message, 'danger');
+    }
   }
 }
 
