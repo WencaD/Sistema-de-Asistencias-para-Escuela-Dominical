@@ -130,8 +130,8 @@ async function insertDefaultData() {
     const maestros = [
       ['Raquel Cubas', 'raquel@iebm.com', '123456', 'parvulos'],
       ['Sahara Gomero', 'sahara@iebm.com', '123456', 'intermedios'],
-      ['Esteban Cuéllar', 'karen@iebm.com', '123456', 'adolescentes'],
-      ['Omar Esteban', 'omar@iebm.com', '123456', 'adultos'],
+      ['Karen Cuéllar', 'karen@iebm.com', '123456', 'adolescentes'],
+      ['Esteban Cuéllar', 'omar@iebm.com', '123456', 'adultos'],
       ['Admin IEBM', 'admin@iebm.com', 'admin123', 'adultos']
     ];
 
