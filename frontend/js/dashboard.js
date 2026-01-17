@@ -80,20 +80,22 @@ async function cargarDatos() {
     console.warn('No se pudo cargar alumnos desde API:', e.message);
   }
 
-  // Cargar asistencias de hoy
+  // Cargar asistencias usando la fecha local del navegador para evitar desface con el servidor
   try {
+    const ahora = new Date();
+    const hoyStr = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`;
+
     const resAsistencias = await Promise.race([
-      fetch('/api/asistencias/hoy', { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`/api/asistencias/hoy?fecha=${hoyStr}`, { headers: { 'Authorization': `Bearer ${token}` } }),
       new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
     ]);
 
     if (resAsistencias.ok) {
       const dataA = await resAsistencias.json();
-      console.log('📊 Datos de asistencias crudos:', dataA);
-      asistenciasData = (dataA.asistencias || []).map(a => ({ id: a.alumno_id + '_' + a.fecha, ...a }));
-      console.log('✅ Asistencias cargadas:', asistenciasData.length, asistenciasData);
-    } else {
-      console.error('Error en respuesta de asistencias:', resAsistencias.status);
+      console.log('📊 Datos de asistencias sincronizados:', dataA);
+      // Usar la fecha devuelta por el servidor (que debería ser hoyStr) para mapear
+      asistenciasData = (dataA.asistencias || []).map(a => ({ id: a.alumno_id + '_' + (a.fecha || hoyStr), ...a }));
+      console.log('✅ Asistencias cargadas:', asistenciasData.length);
     }
   } catch (e) {
     console.warn('No se pudo cargar asistencias desde API:', e.message);

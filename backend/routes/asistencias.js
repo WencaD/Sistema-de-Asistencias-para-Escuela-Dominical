@@ -31,7 +31,7 @@ router.get('/fecha/:fecha', verifyToken, async (req, res) => {
     const { fecha } = req.params;
     const maestroClase = req.user.clase;
     const connection = getConnection();
-    
+
     const [rows] = await connection.execute(`
       SELECT 
         a.id,
@@ -56,14 +56,15 @@ router.get('/fecha/:fecha', verifyToken, async (req, res) => {
   }
 });
 
-// Obtener asistencias de hoy
+// Obtener asistencias de hoy (o una fecha específica vía query param)
 router.get('/hoy', verifyToken, async (req, res) => {
   try {
-    const hoy = moment().format('YYYY-MM-DD');
+    // Si el frontend envía ?fecha=YYYY-MM-DD, usamos esa. Si no, la del servidor.
+    const hoy = req.query.fecha || moment().format('YYYY-MM-DD');
     const maestroClase = req.user.clase;
     const maestroId = req.user.id;
     const connection = getConnection();
-    
+
     // Obtener todos los alumnos de la clase
     const [alumnos] = await connection.execute(
       'SELECT id, nombre, apellidos FROM alumnos WHERE clase = ? AND activo = 1 ORDER BY apellidos, nombre',
@@ -174,7 +175,7 @@ router.post('/multiple', verifyToken, async (req, res) => {
     const connection = getConnection();
 
     const resultados = [];
-    
+
     for (const asistencia of asistencias) {
       const { alumno_id, hora_llegada, estado, observaciones } = asistencia;
 

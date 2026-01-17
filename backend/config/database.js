@@ -135,13 +135,17 @@ async function insertDefaultData() {
       ['Admin IEBM', 'admin@iebm.com', 'admin123', 'adultos']
     ];
 
-    for (const maestro of maestros) {
-      // Hashear la contraseña antes de insertar
-      const hashedPassword = await bcrypt.hash(maestro[2], 10);
+    // Insertar o actualizar maestros por defecto
+    for (const [nombre, email, password, clase] of maestros) {
+      const bcrypt = require('bcryptjs');
+      const hashedPw = await bcrypt.hash(password, 10);
       await connection.execute(`
-        INSERT IGNORE INTO maestros (nombre, email, password, clase) 
+        INSERT INTO maestros (nombre, email, password, clase)
         VALUES (?, ?, ?, ?)
-      `, [maestro[0], maestro[1], hashedPassword, maestro[3]]);
+        ON DUPLICATE KEY UPDATE
+          nombre = VALUES(nombre),
+          clase = VALUES(clase)
+      `, [nombre, email, hashedPw, clase]);
     }
 
     // NO insertar alumnos de ejemplo - solo los que el usuario cree
