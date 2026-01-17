@@ -18,13 +18,13 @@ async function connectDB() {
   try {
     connection = await mysql.createConnection(dbConfig);
     console.log('✅ Conexión a MySQL establecida correctamente');
-    
+
     // Crear la base de datos si no existe
     await createDatabase();
     await createTables();
     await ensureAlumnoColumns();
     await insertDefaultData();
-    
+
     return connection;
   } catch (error) {
     console.warn('⚠️ No se pudo conectar a MySQL:', error.message);
@@ -125,12 +125,12 @@ async function ensureAlumnoColumns() {
 async function insertDefaultData() {
   try {
     const bcrypt = require('bcryptjs');
-    
+
     // Insertar maestros por defecto con contraseñas hasheadas
     const maestros = [
       ['Raquel Cubas', 'raquel@iebm.com', '123456', 'parvulos'],
-      ['Sahara Homero', 'sahara@iebm.com', '123456', 'intermedios'],
-      ['Karen Cuéllar', 'karen@iebm.com', '123456', 'adolescentes'],
+      ['Sahara Gomero', 'sahara@iebm.com', '123456', 'intermedios'],
+      ['Esteban Cuéllar', 'karen@iebm.com', '123456', 'adolescentes'],
       ['Omar Esteban', 'omar@iebm.com', '123456', 'adultos'],
       ['Admin IEBM', 'admin@iebm.com', 'admin123', 'adultos']
     ];
